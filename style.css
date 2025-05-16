@@ -1,0 +1,123 @@
+/* style.css */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #fb8383;
+  color: #333;
+  line-height: 1.6;
+}
+
+header, footer {
+  background-color: #1e90ff;
+  color: rgb(3, 3, 0);
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+section {
+  max-width: 100%;       /* 제한을 제거 */
+  width: calc(100% - 40px); /* 좌우 여백 고려 (같이 맞추기) */
+  margin: 40px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  box-sizing: border-box;
+}
+
+h2 {
+  color: #1e90ff;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+ul, ol {
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+}
+
+th {
+  background-color: #f0f8ff;
+  color: #333;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+figure {
+  text-align: center;
+  margin: 30px 0;
+}
+
+img {
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+figcaption {
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+a {
+  color: #1e90ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  font-size: 0.9em;
+}
+
+.trend-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap; /* 줄 바꿈 허용 */
+  gap: 20px;
+  padding: 20px;
+}
+
+/* 각 섹션은 박스 형태로 일정 너비 유지 */
+.trend-container section {
+  flex: 1 1 calc(25% - 20px); /* 4개가 한 줄에 보이도록 */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  padding: 15px;
+  min-width: 200px;
+}
+
