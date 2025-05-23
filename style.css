@@ -7,14 +7,14 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #fb8383;
+  background-color: #e6f2ff;
   color: #333;
   line-height: 1.6;
 }
 
 header, footer {
-  background-color: #1e90ff;
-  color: rgb(3, 3, 0);
+  background-color: #0077cc; /* 파란색 배경 */
+  color: white;
   padding: 20px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -23,21 +23,34 @@ header, footer {
 header h1 {
   margin: 0;
   font-size: 2em;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 🔽 요청 반영: 검정색 메뉴 링크 */
+header nav a {
+  color: black;
+  font-weight: bold;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+header nav a:hover {
+  text-decoration: underline;
 }
 
 section {
-  max-width: 100%;       /* 제한을 제거 */
-  width: calc(100% - 40px); /* 좌우 여백 고려 (같이 맞추기) */
+  max-width: 100%;
+  width: calc(100% - 40px);
   margin: 40px auto;
   padding: 20px;
   background-color: white;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-  box-sizing: border-box;
 }
 
 h2 {
-  color: #1e90ff;
+  color: #0077cc;
   border-bottom: 2px solid #eee;
   padding-bottom: 10px;
   margin-bottom: 20px;
@@ -64,12 +77,12 @@ th, td {
 }
 
 th {
-  background-color: #f0f8ff;
-  color: #333;
+  background-color: #cce5ff;
+  color: #003366;
 }
 
 tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f4faff;
 }
 
 figure {
@@ -91,7 +104,7 @@ figcaption {
 }
 
 a {
-  color: #1e90ff;
+  color: #005cbf;
   text-decoration: none;
 }
 
@@ -106,18 +119,52 @@ footer {
 .trend-container {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap; /* 줄 바꿈 허용 */
+  flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
 }
 
-/* 각 섹션은 박스 형태로 일정 너비 유지 */
 .trend-container section {
-  flex: 1 1 calc(25% - 20px); /* 4개가 한 줄에 보이도록 */
+  flex: 1 1 calc(25% - 20px);
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.05);
   padding: 15px;
   min-width: 200px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
+
+.trend-container section:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+ul li a {
+  font-weight: bold;
+  background-color: #cce5ff;
+  padding: 6px 10px;
+  display: inline-block;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  transition: background-color 0.2s ease;
+}
+
+ul li a:hover {
+  background-color: #0077cc;
+  color: white;
+}
+
+.fixed-banner {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #0077cc;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 100;
+}
+
 
