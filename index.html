@@ -1,35 +1,519 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Social Trend Report - Home</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Social Media Trends - Real-time Analysis Platform</title>
+    <meta name="description" content="Real-time social media trends analysis with live data from Google, Twitter, and YouTube">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header>
-  <h1>📊 Social Media Trend Report</h1>
-</header>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-chart-line"></i>
+                <span>LiveTrendScope</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#overview" class="nav-link">Live Overview</a></li>
+                <li><a href="#trends" class="nav-link">Trending Now</a></li>
+                <li><a href="#sentiment" class="nav-link">Sentiment Analysis</a></li>
+                <li><a href="#platforms" class="nav-link">Platform Data</a></li>
+                <li><a href="#reports" class="nav-link">Reports</a></li>
+            </ul>
+            <div class="live-indicator">
+                <span class="live-dot"></span>
+                <span>LIVE</span>
+            </div>
+            <div class="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
-<main>
-  <section>
-    <h2>Welcome</h2>
-    <p>Google, Twitter, YouTube, Instagram 기반의 트렌드를 시각적으로 분석한 리포트입니다.</p>
+    <!-- Hero Section -->
+    <section class="hero" id="overview">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Live Social Media Trends</h1>
+                <p>Real-time analysis of trending topics across Google, Twitter, and YouTube with live data feeds</p>
+                <div class="data-sources">
+                    <div class="source-badge">
+                        <i class="fab fa-google"></i>
+                        <span>all-hashtag.com</span>
+                    </div>
+                    <div class="source-badge">
+                        <i class="fab fa-twitter"></i>
+                        <span>trends24.in</span>
+                    </div>
+                    <div class="source-badge">
+                        <i class="fab fa-youtube"></i>
+                        <span>YouTube Trends API</span>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="live-posts-count">0</span>
+                        <span class="stat-label">Posts Analyzed (Live)</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="live-trends-count">0</span>
+                        <span class="stat-label">Active Trends</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="live-engagement">0</span>
+                        <span class="stat-label">% Avg Engagement</span>
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="cta-button" onclick="scrollToSection('trends')">
+                        <i class="fas fa-rocket"></i>
+                        View Live Trends
+                    </button>
+                    <button class="refresh-button" onclick="refreshLiveData()">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh Data
+                    </button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="live-feed-preview">
+                    <h3>Live Data Feed</h3>
+                    <div class="feed-items" id="live-feed">
+                        <!-- Live feed items will be populated here -->
+                    </div>
+                    <div class="last-updated">
+                        Last updated: <span id="last-update-time">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <ul>
-      <li><a href="about.html">📘 프로젝트 개요 보기</a></li>
-      <li><a href="main.html">📊 트렌드 보고서 보기</a></li>
-    </ul>
+    <!-- Live Status Bar -->
+    <section class="status-bar">
+        <div class="container">
+            <div class="status-items">
+                <div class="status-item">
+                    <i class="fas fa-wifi status-icon active"></i>
+                    <span>Google Feed: <span class="status-text" id="google-status">Connected</span></span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-wifi status-icon active"></i>
+                    <span>Twitter Trends: <span class="status-text" id="twitter-status">Connected</span></span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-wifi status-icon active"></i>
+                    <span>YouTube Data: <span class="status-text" id="youtube-status">Connected</span></span>
+                </div>
+                <div class="status-item">
+                    <i class="fas fa-clock"></i>
+                    <span>Next Update: <span id="next-update-countdown">--</span></span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <figure>
-      <img src="images/1.png" alt="소셜 트렌드 대표 이미지" width="500">
-      <figcaption>Figure: 소셜 미디어 트렌드의 시각적 흐름</figcaption>
-    </figure>
-  </section>
-</main>
+    <!-- Live Trending Topics Section -->
+    <section class="trending-section" id="trends">
+        <div class="container">
+            <div class="section-header">
+                <h2>Live Trending Topics</h2>
+                <p>Real-time data from Google trends and Twitter trends in Korea</p>
+                <div class="update-info">
+                    <span class="update-badge">
+                        <i class="fas fa-sync-alt" id="update-spinner"></i>
+                        Auto-updating every 1 minute
+                    </span>
+                </div>
+            </div>
+            
+            <div class="trending-content">
+                <div class="trending-main">
+                    <div class="trending-controls">
+                        <div class="trending-filters">
+                            <button class="filter-btn active" data-platform="all">All Platforms</button>
+                            <button class="filter-btn" data-platform="google">Google Live</button>
+                            <button class="filter-btn" data-platform="twitter">Twitter Korea</button>
+                            <button class="filter-btn" data-platform="youtube">YouTube Trending</button>
+                        </div>
+                        <div class="sort-controls">
+                            <select id="sort-select">
+                                <option value="trending">Most Trending</option>
+                                <option value="recent">Most Recent</option>
+                                <option value="engagement">Highest Engagement</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="live-trends-container">
+                        <div class="trends-header">
+                            <h3>Live Trending Data</h3>
+                            <div class="data-freshness">
+                                <span class="freshness-indicator fresh"></span>
+                                <span>Data freshness: <span id="data-age">Just now</span></span>
+                            </div>
+                        </div>
+                        
+                        <div class="trending-list" id="live-trending-list">
+                            <!-- Live trending data will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="trending-sidebar">
+                    <div class="live-keyword-cloud">
+                        <h3>Live Keywords</h3>
+                        <div class="keyword-cloud" id="live-keyword-cloud">
+                            <!-- Live keywords will be populated here -->
+                        </div>
+                        <div class="keyword-stats">
+                            <small>Updated from live Google</small>
+                        </div>
+                    </div>
+                    
+                    <div class="regional-trends">
+                        <h3>Korea Regional Trends</h3>
+                        <div class="regional-list" id="korea-trends">
+                            <!-- Korea-specific trends will be populated here -->
+                        </div>
+                        <div class="regional-stats">
+                            <small>Data from trends24.in/korea</small>
+                        </div>
+                    </div>
+                    
+                    <div class="trending-insights">
+                        <h3>Live Insights</h3>
+                        <div class="insights-list" id="live-insights">
+                            <!-- Live insights will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<footer>
-  <p>&copy; 2025 Web Programming Project - Group 7</p>
-</footer>
+    <!-- Real-time Analytics Dashboard -->
+    <section class="analytics-section" id="sentiment">
+        <div class="container">
+            <div class="section-header">
+                <h2>Real-time Analytics Dashboard</h2>
+                <p>Live sentiment analysis and engagement metrics</p>
+            </div>
+            
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Live Sentiment Analysis</h3>
+                        <div class="live-indicator-small">
+                            <span class="live-dot-small"></span>
+                            <span>LIVE</span>
+                        </div>
+                    </div>
+                    <div class="sentiment-chart-container">
+                        <canvas id="live-sentiment-chart"></canvas>
+                    </div>
+                    <div class="sentiment-summary" id="sentiment-summary">
+                        <!-- Live sentiment summary -->
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Engagement Trends</h3>
+                        <div class="time-selector">
+                            <button class="time-btn active" data-time="1h">1H</button>
+                            <button class="time-btn" data-time="6h">6H</button>
+                            <button class="time-btn" data-time="24h">24H</button>
+                        </div>
+                    </div>
+                    <div class="engagement-chart-container">
+                        <canvas id="live-engagement-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Platform Distribution</h3>
+                        <div class="distribution-stats" id="platform-stats">
+                            <!-- Platform distribution stats -->
+                        </div>
+                    </div>
+                    <div class="platform-chart-container">
+                        <canvas id="platform-distribution-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <div class="card-header">
+                        <h3>Trending Velocity</h3>
+                        <div class="velocity-indicator" id="velocity-indicator">
+                            <!-- Trending velocity indicator -->
+                        </div>
+                    </div>
+                    <div class="velocity-chart-container">
+                        <canvas id="velocity-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Live Platform Data Section -->
+    <section class="platforms-section" id="platforms">
+        <div class="container">
+            <div class="section-header">
+                <h2>Live Platform Data</h2>
+                <p>Real-time data feeds from each social media platform</p>
+            </div>
+            
+            <div class="platform-cards">
+                <div class="platform-card google-card">
+                    <div class="platform-header">
+                        <div class="platform-info">
+                            <i class="fab fa-google"style="color: #4285F4;"></i>
+                            <div>
+                                <h3>Google Trends</h3>
+                                <p>Live data from all-hashtag.com</p>
+                            </div>
+                        </div>
+                        <div class="connection-status connected">
+                            <span class="status-dot"></span>
+                            <span>Connected</span>
+                        </div>
+                    </div>
+                    <div class="platform-content">
+                        <div class="live-hashtags" id="google-trends">
+                            <!-- Live Google trends -->
+                        </div>
+                        <div class="platform-stats">
+                            <div class="stat">
+                                <span class="stat-label">Top Hashtag</span>
+                                <span class="stat-value" id="google-top-trends">--</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Total Tracked</span>
+                                <span class="stat-value" id="google-total">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="platform-card twitter-card">
+                    <div class="platform-header">
+                        <div class="platform-info">
+                            <i class="fab fa-twitter"></i>
+                            <div>
+                                <h3>Twitter Trends Korea</h3>
+                                <p>Live data from trends24.in</p>
+                            </div>
+                        </div>
+                        <div class="connection-status connected">
+                            <span class="status-dot"></span>
+                            <span>Connected</span>
+                        </div>
+                    </div>
+                    <div class="platform-content">
+                        <div class="live-trends" id="twitter-trends">
+                            <!-- Live Twitter trends -->
+                        </div>
+                        <div class="platform-stats">
+                            <div class="stat">
+                                <span class="stat-label">Top Trend</span>
+                                <span class="stat-value" id="twitter-top-trend">--</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Region</span>
+                                <span class="stat-value">Korea</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="platform-card youtube-card">
+                    <div class="platform-header">
+                        <div class="platform-info">
+                            <i class="fab fa-youtube"></i>
+                            <div>
+                                <h3>YouTube Trending</h3>
+                                <p>Live trending videos data</p>
+                            </div>
+                        </div>
+                        <div class="connection-status connected">
+                            <span class="status-dot"></span>
+                            <span>Connected</span>
+                        </div>
+                    </div>
+                    <div class="platform-content">
+                        <div class="live-videos" id="youtube-videos">
+                            <!-- Live YouTube trending videos -->
+                        </div>
+                        <div class="platform-stats">
+                            <div class="stat">
+                                <span class="stat-label">Top Video</span>
+                                <span class="stat-value" id="youtube-top-video">--</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Category</span>
+                                <span class="stat-value" id="youtube-top-category">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Integration Guide -->
+    <section class="api-section" id="reports">
+        <div class="container">
+            <div class="section-header">
+                <h2>Live Data Integration</h2>
+                <p>How to implement real-time data fetching from external sources</p>
+            </div>
+            
+            <div class="api-content">
+                <div class="integration-cards">
+                    <div class="integration-card">
+                        <div class="integration-header">
+                            <i class="fas fa-code"></i>
+                            <h3>Backend Proxy Setup</h3>
+                        </div>
+                        <div class="integration-content">
+                            <p>To fetch live data from external sources, you need a backend proxy to handle CORS restrictions:</p>
+                            <div class="code-example">
+                                <pre><code>// Node.js Express Proxy Example
+app.get('/api/google-trends', async (req, res) => {
+  const response = await fetch('https://all-hashtag.com/trending-google-hashtags.php');
+  const data = await response.text();
+  // Parse HTML and extract hashtags
+  res.json(parsedData);
+});</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="integration-card">
+                        <div class="integration-header">
+                            <i class="fas fa-database"></i>
+                            <h3>Data Sources</h3>
+                        </div>
+                        <div class="integration-content">
+                            <div class="data-source">
+                                <h4>Google Hashtags</h4>
+                                <p>Source: all-hashtag.com/trending-google-hashtags.php</p>
+                                <p>Method: HTML scraping with cheerio.js</p>
+                            </div>
+                            <div class="data-source">
+                                <h4>Twitter Trends Korea</h4>
+                                <p>Source: trends24.in/korea/</p>
+                                <p>Method: HTML parsing for trend data</p>
+                            </div>
+                            <div class="data-source">
+                                <h4>YouTube Trending</h4>
+                                <p>Source: YouTube Data API v3</p>
+                                <p>Method: Official API integration</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="integration-card">
+                        <div class="integration-header">
+                            <i class="fas fa-sync-alt"></i>
+                            <h3>Real-time Updates</h3>
+                        </div>
+                        <div class="integration-content">
+                            <p>Current implementation uses simulated live data. For production:</p>
+                            <ul>
+                                <li>Set up WebSocket connections for real-time updates</li>
+                                <li>Implement caching with Redis for performance</li>
+                                <li>Use rate limiting to respect API quotas</li>
+                                <li>Add error handling and fallback mechanisms</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="demo-notice">
+                    <div class="notice-content">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <h4>Demo Mode Active</h4>
+                            <p>This demo uses simulated live data that mimics real trends. In production, implement the backend proxy to fetch actual live data from the specified sources.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LiveTrendScope</h3>
+                    <p>Real-time social media trends analysis platform</p>
+                    <div class="data-attribution">
+                        <p><strong>Data Sources:</strong></p>
+                        <ul>
+                            <li>Google: all-hashtag.com</li>
+                            <li>Twitter: trends24.in</li>
+                            <li>YouTube: YouTube Data API</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Live Features</h4>
+                    <ul>
+                        <li><a href="#trends">Real-time Trends</a></li>
+                        <li><a href="#sentiment">Live Sentiment</a></li>
+                        <li><a href="#platforms">Platform Data</a></li>
+                        <li><a href="#reports">API Integration</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Technical Info</h4>
+                    <ul>
+                        <li><a href="#">API Documentation</a></li>
+                        <li><a href="#">Rate Limits</a></li>
+                        <li><a href="#">Data Freshness</a></li>
+                        <li><a href="#">Status Page</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>System Status</h4>
+                    <div class="system-status">
+                        <div class="status-item">
+                            <span class="status-indicator operational"></span>
+                            <span>All Systems Operational</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-indicator operational"></span>
+                            <span>Data Feeds Active</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-indicator operational"></span>
+                            <span>API Responsive</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 LiveTrendScope. Real-time data analysis platform. | Last data refresh: <span id="footer-last-update">--</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
