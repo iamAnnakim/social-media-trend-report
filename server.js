@@ -8,14 +8,14 @@ app.use(cors());
 
 // ✅ Google Trends - 더미 데이터 사용
 app.get('/api/google-trends', (req, res) => {
-  const dummyHashtags = [
+  const dummykeywords = [
     '#이재명아들', '#사전투표기간', '#카리나', '#최정우', '#한화대lg', '#롯데대삼성', '#키움대kia', '#사전투표소'
   ];
-  res.json({ hashtags: dummyHashtags });
+  res.json({ keywords: dummykeywords });
 });
 
-// ✅ Twitter Trends - 실제 크롤링 유지
-app.get('/api/twitter-trends', async (req, res) => {
+// ✅ X Trends - 실제 크롤링 유지
+app.get('/api/X-trends', async (req, res) => {
   try {
     const html = await fetch('https://trends24.in/korea/').then(r => r.text());
     const $ = cheerio.load(html);
@@ -27,8 +27,8 @@ app.get('/api/twitter-trends', async (req, res) => {
 
     res.json({ trends });
   } catch (err) {
-    console.error('Twitter Trends fetch error:', err);
-    res.status(500).json({ error: 'Twitter Trends fetch failed' });
+    console.error('X Trends fetch error:', err);
+    res.status(500).json({ error: 'X Trends fetch failed' });
   }
 });
 

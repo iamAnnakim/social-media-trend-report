@@ -7,7 +7,7 @@ class LiveDataManager {
         this.charts = {};
         this.currentData = {
             google: [],
-            twitter: [],
+            X: [],
             youtube: [],
             sentiment: {},
             engagement: {}
@@ -20,18 +20,18 @@ class LiveDataManager {
     async fetchGoogleData() {
         const res = await fetch('http://localhost:3000/api/google-trends');
         const data = await res.json();
-        this.currentData.google = data.hashtags.map(tag => ({
-            hashtag: tag,
+        this.currentData.google = data.keywords.map(tag => ({
+            keyword: tag,
             posts: Math.floor(Math.random() * 1000000000),
             growth: Math.random() * 5,
             category: 'general'
         }));
     }
 
-    async fetchTwitterData() {
-        const res = await fetch('http://localhost:3000/api/twitter-trends');
+    async fetchXData() {
+        const res = await fetch('http://localhost:3000/api/X-trends');
         const data = await res.json();
-        this.currentData.twitter = data.trends.map(trend => ({
+        this.currentData.X = data.trends.map(trend => ({
             trend: trend,
             tweets: Math.floor(Math.random() * 50000),
             growth: Math.random() * 10,
@@ -53,7 +53,7 @@ class LiveDataManager {
     async initializeData() {
         await Promise.all([
             this.fetchGoogleData(),
-            this.fetchTwitterData(),
+            this.fetchXData(),
             this.fetchYouTubeData()
         ]);
         this.updateDisplays();
@@ -81,9 +81,9 @@ class LiveDataManager {
     }
 
     addLiveFeedItem() {
-        const platforms = ['Google', 'Twitter', 'YouTube'];
+        const platforms = ['Google', 'X', 'YouTube'];
         const platform = platforms[Math.floor(Math.random() * platforms.length)];
-        const actions = ['New trending hashtag', 'Viral content detected', 'Engagement spike', 'New trend emerging'];
+        const actions = ['New trending keyword', 'Viral content detected', 'Engagement spike', 'New trend emerging'];
         const action = actions[Math.floor(Math.random() * actions.length)];
 
         const feedItem = document.createElement('div');
@@ -142,16 +142,16 @@ class LiveDataManager {
             data = data.concat(this.currentData.google.slice(0, 5).map(item => ({
                 ...item,
                 platform: 'google',
-                type: 'hashtag',
+                type: 'keyword',
                 engagement: this.formatNumber(item.posts),
                 isLive: Math.random() > 0.7
             })));
         }
 
-        if (platform === 'all' || platform === 'twitter') {
-            data = data.concat(this.currentData.twitter.slice(0, 5).map(item => ({
+        if (platform === 'all' || platform === 'X') {
+            data = data.concat(this.currentData.X.slice(0, 5).map(item => ({
                 ...item,
-                platform: 'twitter',
+                platform: 'X',
                 type: 'trend',
                 engagement: this.formatNumber(item.tweets) + ' tweets',
                 isLive: Math.random() > 0.6
@@ -174,7 +174,7 @@ class LiveDataManager {
         container.innerHTML = data.map((item, index) => `
             <div class="trending-item ${item.isLive ? 'live' : ''}" data-platform="${item.platform}">
                 <div class="trending-info">
-                    <h3>${item.hashtag || item.trend || item.title}</h3>
+                    <h3>${item.keyword || item.trend || item.title}</h3>
                     <div class="trending-meta">
                         <span class="platform-tag ${item.platform}">${item.platform.charAt(0).toUpperCase() + item.platform.slice(1)}</span>
                         <span>${item.engagement}</span>
@@ -197,18 +197,18 @@ class LiveDataManager {
         // Extract keywords from current trending data
         const keywords = [];
         
-        // From Google hashtags
+        // From Google keywords
         this.currentData.google.slice(0, 10).forEach(item => {
             keywords.push({
-                text: item.hashtag.replace('#', ''),
+                text: item.keyword.replace('#', ''),
                 size: this.getKeywordSize(item.posts),
                 count: item.posts,
                 trending: item.growth > 3
             });
         });
 
-        // From Twitter trends
-        this.currentData.twitter.slice(0, 8).forEach(item => {
+        // From X trends
+        this.currentData.X.slice(0, 8).forEach(item => {
             if (!item.trend.startsWith('#')) return;
             keywords.push({
                 text: item.trend.replace('#', ''),
@@ -240,7 +240,7 @@ class LiveDataManager {
         const container = document.getElementById('korea-trends');
         if (!container) return;
 
-        const koreaData = this.currentData.twitter.slice(0, 8);
+        const koreaData = this.currentData.X.slice(0, 8);
         
         container.innerHTML = koreaData.map((item, index) => `
             <div class="regional-item">
@@ -257,27 +257,27 @@ class LiveDataManager {
     }
 
     renderPlatformData() {
-        // Google hashtags
+        // Google keywords
         const googleContainer = document.getElementById('google-trends');
         if (googleContainer) {
             googleContainer.innerHTML = this.currentData.google.slice(0, 6).map(item => `
-                <div class="hashtag-item">
-                    <span class="hashtag-text">${item.hashtag}</span>
-                    <span class="hashtag-count">${this.formatNumber(item.posts)}</span>
+                <div class="keyword-item">
+                    <span class="keyword-text">${item.keyword}</span>
+                    <span class="keyword-count">${this.formatNumber(item.posts)}</span>
                 </div>
             `).join('');
 
             // Update stats
-            const topHashtag = document.getElementById('google-top-hashtag');
+            const topkeyword = document.getElementById('google-top-keyword');
             const totalTracked = document.getElementById('google-total');
-            if (topHashtag) topHashtag.textContent = this.currentData.google[0].hashtag;
+            if (topkeyword) topkeyword.textContent = this.currentData.google[0].keyword;
             if (totalTracked) totalTracked.textContent = this.currentData.google.length;
         }
 
-        // Twitter trends
-        const twitterContainer = document.getElementById('twitter-trends');
-        if (twitterContainer) {
-            twitterContainer.innerHTML = this.currentData.twitter.slice(0, 6).map(item => `
+        // X trends
+        const XContainer = document.getElementById('X-trends');
+        if (XContainer) {
+            XContainer.innerHTML = this.currentData.X.slice(0, 6).map(item => `
                 <div class="trend-item">
                     <span class="trend-text">${item.trend}</span>
                     <span class="trend-count">${this.formatNumber(item.tweets)}</span>
@@ -285,8 +285,8 @@ class LiveDataManager {
             `).join('');
 
             // Update stats
-            const topTrend = document.getElementById('twitter-top-trend');
-            if (topTrend) topTrend.textContent = this.currentData.twitter[0].trend;
+            const topTrend = document.getElementById('X-top-trend');
+            if (topTrend) topTrend.textContent = this.currentData.X[0].trend;
         }
 
         // YouTube videos
@@ -369,7 +369,7 @@ class LiveDataManager {
                             tension: 0.4
                         },
                         {
-                            label: 'Twitter',
+                            label: 'X',
                             data: this.generateEngagementData(24),
                             borderColor: '#1da1f2',
                             backgroundColor: '#1da1f220',
@@ -424,10 +424,10 @@ class LiveDataManager {
                         {
                             label: 'Google',
                             data: [45, 78, 23],
-                            backgroundColor: '#e1306c'
+                            backgroundColor: '#10b981'
                         },
                         {
-                            label: 'Twitter',
+                            label: 'X',
                             data: [35, 65, 18],
                             backgroundColor: '#1da1f2'
                         },
@@ -508,42 +508,43 @@ class LiveDataManager {
     }
 
     generateLiveInsights() {
-        const insights = [];
-        
-        // Analyze current data for insights
-        const topGoogleGrowth = Math.max(...this.currentData.google.map(item => item.growth));
-        const topTwitterGrowth = Math.max(...this.currentData.twitter.map(item => item.growth));
-        
-        if (topGoogleGrowth > 5) {
-            insights.push({
-                type: 'positive',
-                title: 'Google Surge Detected',
-                description: `Hashtag growth rate reached ${topGoogleGrowth.toFixed(1)}% - highest in 24 hours`
-            });
-        }
+    const insights = [];
 
-        if (topTwitterGrowth > 10) {
-            insights.push({
-                type: 'alert',
-                title: 'Twitter Trend Explosion',
-                description: `Korea trending topic growing at ${topTwitterGrowth.toFixed(1)}% - viral potential detected`
-            });
-        }
-
-        insights.push({
-            type: '',
-            title: 'Cross-Platform Correlation',
-            description: 'K-pop related content showing synchronized growth across all platforms'
-        });
-
+    // Analyze current data for insights
+    const topGoogleGrowth = Math.max(...this.currentData.google.map(item => item.growth));
+    const topXGrowth = Math.max(...this.currentData.X.map(item => item.growth));
+    if (topGoogleGrowth > 5) {
         insights.push({
             type: 'positive',
-            title: 'Engagement Quality High',
-            description: 'Comment-to-like ratio indicates authentic engagement rather than bot activity'
+            title: 'Google Surge Detected',
+            description: `keyword growth rate reached ${topGoogleGrowth.toFixed(1)}% - highest in 24 hours`
         });
-
-        return insights;
     }
+
+    if (topXGrowth > 10) {
+        insights.push({
+            type: 'alert',
+            title: 'X Trend Explosion',
+            description: `Korea trending topic growing at ${topXGrowth.toFixed(1)}% - viral potential detected`
+        });
+    }
+
+    // 🟧 정치 이슈: 대통령 선거 관련
+    insights.push({
+        type: 'alert',
+        title: 'Election Debate Intensifies',
+        description: 'Online discussions around presidential election fairness are rapidly increasing across social platforms.'
+    });
+
+    // 🟥 보안 이슈: SKT 유출
+    insights.push({
+        type: 'alert',
+        title: 'Security Concerns Rising',
+        description: 'SK Telecom data breach draws massive public attention, fueling conversations on digital safety.'
+    });
+
+    return insights;
+}
 
     updateTimestamps() {
         const now = new Date();
@@ -629,7 +630,7 @@ class LiveDataManager {
                 art: "Artistic expression gaining momentum in creative communities",
                 general: "Broad appeal content with consistent engagement patterns"
             },
-            twitter: {
+            X: {
                 default: "Real-time discussion trending in Korean social media landscape"
             },
             youtube: {
@@ -642,8 +643,8 @@ class LiveDataManager {
 
         if (item.platform === 'google') {
             return descriptions.google[item.category] || descriptions.google.general;
-        } else if (item.platform === 'twitter') {
-            return descriptions.twitter.default;
+        } else if (item.platform === 'X') {
+            return descriptions.X.default;
         } else if (item.platform === 'youtube') {
             return descriptions.youtube[item.category] || descriptions.youtube.default;
         }
@@ -679,7 +680,7 @@ class LiveDataManager {
                     <p><strong>Platform Distribution:</strong></p>
                     <ul>
                         <li>Google: 65%</li>
-                        <li>Twitter: 25%</li>
+                        <li>X: 25%</li>
                         <li>YouTube: 10%</li>
                     </ul>
                     <p><strong>Trend Status:</strong> ${Math.random() > 0.5 ? 'Rising' : 'Stable'}</p>
@@ -944,3 +945,5 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+
